@@ -1,0 +1,313 @@
+<appy-page definition>
+
+    <template>
+        <div class="appy-page" link="<page-link>">
+            <nav-bar><page-link var></page-link></nav-bar>
+            
+            <div class="page-header">
+                <h1><page-name var></page-name></h1>
+            </div>
+
+            <div class="page-content">
+                 <page-content var></page-content>
+            </div>
+
+            <div class="modal-container">
+                <div class="modal-close" onclick="doc.close_modal(this.closest('.appy-page'))">
+                    <svg-close></svg-close>
+                </div>
+                <div class="modal-content"></div>
+            </div>
+        </div>
+        
+        <style>
+            #appy-pages[page*="<page-link>"] .appy-page[link*="<page-link>"] {
+                display:block;
+            }
+
+            body[page-1="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"],
+            body[page-2="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"],
+            body[page-3="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"], 
+            body[page-4="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"],
+            body[page-1="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] .link-name,
+            body[page-2="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] .link-name,
+            body[page-3="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] .link-name, 
+            body[page-4="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] .link-name,
+            body[page-1="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] svg,
+            body[page-2="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] svg,
+            body[page-3="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] svg, 
+            body[page-4="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] svg {
+                color:#363647;
+                fill:#363647;
+                stroke:#363647;
+            }
+
+            body[page-1="<page-link>"] .appy-page[link="<page-link>"]  {order:1;}
+            body[page-2="<page-link>"] .appy-page[link="<page-link>"]  {order:2;}
+            body[page-3="<page-link>"] .appy-page[link="<page-link>"]  {order:3;}
+            body[page-4="<page-link>"] .appy-page[link="<page-link>"]  {order:4;}
+
+            /* on the first nav, position it below the <header> */
+            #appy-pages[page^="<page-link>"] .appy-page[link="<page-link>"] .nav-bar {
+                top:90px;
+            }
+
+            /* display close-nav link */
+            #appy-pages[page*="<page-link>"]:not([page^="<page-link>"]) .appy-page[link="<page-link>"] .nav-bar .close-nav {
+                height:90px;
+            }
+
+            /* don't display logout link */
+            #appy-pages[page*="<page-link>"]:not([page^="<page-link>"]) .appy-page[link="<page-link>"] .nav-bar .nav-link[link="/logout"] {
+                display:none;
+            }
+
+
+            /* when the selected page-link does not appear in the url, make it selectable */ 
+            #appy-pages:not([page*="<page-link>"]) .appy-page[link="<page-link>"] .nav-link[link="<page-link>"] svg {
+                fill:#fff;
+                stroke:#fff;
+            }
+
+            #appy-pages:not([page*="<page-link>"]) .appy-page[link="<page-link>"] .nav-link[link="<page-link>"] .link-name {
+                color:#fff;
+            }
+
+            /* style select page in tan */
+            .appy-page[link="<page-link>"] .nav-link[link="<page-link>"] .link-name {
+                color:#F1C0A9;
+                text-decoration:underline;
+            }
+
+            .appy-page[link="<page-link>"] .nav-link[link="<page-link>"] .icon svg {
+                fill: #F1C0A9;
+            }
+
+            /* don't display split window option on current page */
+            .appy-page[link="<page-link>"] .nav-link[link="<page-link>"] .split-window {
+                display:none;
+            }
+
+            #appy-pages[page^="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"],
+            #appy-pages[page^="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] .link-name,
+            #appy-pages[page^="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] .icon,
+            #appy-pages[page$="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"],
+            #appy-pages[page$="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] .link-name,
+            #appy-pages[page$="<page-link>"] .appy-page:not([link="<page-link>"]) .nav-link[link="<page-link>"] .icon {
+                cursor:not-allowed;
+            }
+
+            body[minimized="true"] .appy-page[link="<page-link>"] .nav-link[link="<page-link>"]:hover .link-name,
+            body[minimized="true"] .appy-page[link="<page-link>"] .nav-link[link="<page-link>"]:hover .split-window {
+                max-width:0;
+            }
+
+            body[minimized="true"] .appy-page[link="<page-link>"] .nav-link[link="<page-link>"]:hover .link-action {
+                padding-right:0;
+            } 
+
+            body[minimized="true"] .appy-page[link="<page-link>"] .nav-link[link="<page-link>"]:hover {
+                min-width:0;
+                width:auto;
+            }
+
+        </style>
+    </template>
+
+    <style>
+        .appy-page {
+            display:none;
+            min-height:100vh;
+            position:relative;
+        }
+
+            .page-header {
+                box-sizing:border-box;
+                padding-left:100px;
+                padding-bottom:10px;
+                padding-top:33px;
+                transition:padding-left .3s ease-out;
+            }
+
+            body[minimized="false"] .page-header {
+                padding-left:240px;
+            }
+
+                h1 {
+                    color:#fff;
+                    font-family:urbane;
+                    font-size:1.75rem;
+                    font-weight:700;
+                }
+
+            .page-content {
+                color:#ccc;
+                font-family:urbane;
+                font-size:.9rem;
+                font-weight:500;
+                padding:20px;
+                padding-right:25px;
+                padding-left:100px;
+                transition:padding-left .3s ease-out;
+            }
+
+            body[minimized="false"] .appy-page .page-content {
+                padding-left:240px;
+            }
+
+
+            .appy-page .modal-container {
+                background-color:rgba(0,0,0,.8);
+                bottom:0; left:0; right:0; top:0;
+                content:'';
+                display:none;
+                position:absolute;
+                z-index:5;
+            }
+
+            .appy-page[show-modal="true"] .modal-container {
+                display:block;
+            }
+
+            .appy-page .modal-close {
+                color:#fff;
+                cursor:pointer;
+                height:30px;
+                left:50%;
+                margin-left:-155px;
+                position:absolute;
+                top:6.5vh;
+                width:30px;
+            }
+
+                .appy-page .modal-close svg {
+                    fill:#fff;
+                    height:auto;
+                    width:100%;
+                }
+
+            .appy-page .modal-content {
+                background-color:#fff;
+                left:50%;
+                margin-left:-150px;
+                min-height:200px;
+                position:absolute;
+                top:10vh;
+                width:300px;
+            }
+
+                .modal-content form {
+                    background-color:#222127;
+                    color:#fff;
+                    padding:20px;
+                    z-index:2;
+                }
+
+                    .modal-content form label {
+                        display:inline-block;
+                        margin-top:20px;
+                        margin-right:10px;
+                        padding-bottom:5px;
+                        text-transform:capitalize;
+                    }
+
+                    .modal-content form label:first-child {
+                        margin-top:0;
+                    }
+
+                    .modal-content form input,
+                    .modal-content form select,
+                    .modal-content form input[type="submit"] {
+                        border-radius:8px;
+                        box-sizing:border-box;
+                        display:inline-block;
+                        font-family:urbane;
+                        font-size:1.2rem;
+                        margin-right:30px;
+                        padding:10px;
+                        width:100%;
+                    }
+
+                    .modal-content form select {
+                        text-transform:capitalize;
+                    }
+
+                    .modal-content form input[type="submit"] {
+                        appearance:none;
+                        -webkit-apperance:none;
+                        background-color:#262B36;
+                        border:none;
+                        margin-top:20px;
+                        padding-top:14px;
+                        padding-bottom:14px;
+                        color:#fff;
+                        cursor:pointer;
+                    }
+
+                    .modal-content .custom-select {
+                        display: block;
+                        width: 100%;
+                    }
+
+                    .custom-select {
+                        appearance: none;
+                        -moz-appearance: none;
+                        -webkit-appearance: none;
+                        background-color: #fff;
+                        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+                            linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
+                        background-position: right .7em top 50%, 0 0;
+                        background-repeat: no-repeat, repeat;
+                        background-size: .65em auto, 100%;
+                        border: 1px solid #aaa;
+                        border-radius: 8px;
+                        box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+                        box-sizing: border-box;
+                        display:inline-block;
+                        color: #444;
+                        font-size: 1rem;
+                        font-family: sans-serif;
+                        font-weight: 700;
+                        line-height: 1.3rem;
+                        margin: 0;
+                        max-width: 100%;
+                        padding: .6em 1.4em .5em .8em;
+                        padding-right:30px;
+                    }
+
+                    .custom-select.dark {
+                        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+                            linear-gradient(to bottom, #222127 0%, #222127 100%);
+                        border-color:rgba(0,0,0,0);
+                        color:#fff;
+                    }
+
+                    .custom-select::-ms-expand {
+                        display: none;
+                    }
+
+                    .custom-select:hover {
+                        border-color: #888;
+                    }
+
+                    .custom-select:focus {
+                        border-color: #aaa;
+                        box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+                        box-shadow: 0 0 0 3px -moz-mac-focusring;
+                        color: #fff;
+                        outline: none;
+                    }
+                        .custom-select option {
+                            font-weight:normal;
+                        }
+
+                    .delete-model {
+                        box-sizing:border-box;
+                        color:#FF473D;
+                        cursor:pointer;
+                        padding:15px;
+                        text-align:center;
+                    }
+    </style>
+
+</appy-page>

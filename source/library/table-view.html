@@ -1,0 +1,229 @@
+<table-view definition>
+
+	<template>
+		<div class="table" id="<table-id>"></div>
+	</template>
+
+	<style>
+		.table .row {
+			border-bottom:1px solid #2B3140;
+			display:grid;
+			grid-auto-columns: 1fr;
+			grid-auto-flow: column;
+		}
+
+		.table .row:first-child {
+			background-color:#222127;
+			border-bottom-width:0;
+			color:#fff;
+			font-weight:600;
+		}
+
+			.table .row:first-child,
+			.table .row:first-child .cell {
+				-webkit-user-select:none;
+			}
+
+			.row .cell {
+				box-sizing:border-box;
+				padding:15px 0;
+				position:relative;
+			}
+
+			.sort-by {
+				cursor:pointer;
+				position:absolute;
+				right:20px;
+				top:10px;
+			}
+
+			.row:first-child .cell svg {
+				display:inline-block;
+				vertical-align:bottom;
+				width:auto;
+			}
+
+			.row:first-child .cell svg.sort-arrow  {
+				height:23px;
+				transform-origin:center;
+				transition:transform .3s ease-out, opacity .3s ease-out;
+			}
+
+			.row:first-child .cell svg.sort-arrow {
+				opacity:0;
+			}
+
+			.row:first-child .cell[sortby] svg {
+				fill:#d2d67e;
+				opacity:1;
+			}
+
+			.row:first-child .cell[sortby] svg {
+				
+			}
+
+			.row:first-child .cell[sortby="desc"] svg.sort-arrow {
+				transform:rotate(180deg);
+			}
+
+			.row:first-child .cell svg.sort-menu  {
+				height:18px;
+				margin-left:6px;
+			}
+
+			.row:first-child .cell:after {
+				color:#d2d67e;
+				content:attr(order);
+				right:15px;
+				top:11px;
+				font-size:.28rem;
+				position:absolute;
+			}
+
+			.row:first-child .cell[order="1"]:after {
+				content:'';
+			}
+
+			.table .row .cell:first-child {
+				padding-left:15px;
+			}
+
+			.table .row .cell:last-child {
+				padding-right:15px;
+			}
+	</style>
+
+	<script>
+		sort_column = function (column) {
+			var highest_order = 0
+			var parent_table = column.closest(".table")
+			var sorted_columns = parent_table.querySelectorAll(".cell[sortby]")
+			sorted_columns.forEach(function(sorted_column){
+				var sorted_column_order = parseInt(sorted_column.getAttribute("order"))
+				if (sorted_column_order > highest_order) {
+					highest_order = sorted_column_order
+				}
+			})
+			highest_order = highest_order + 1
+
+			var col_sortby = column.getAttribute("sortby")
+			var sort_str = ""
+			if (col_sortby == null) {
+				sort_str = "desc"
+				column.setAttribute("sortby", sort_str)
+				column.setAttribute("order", highest_order)
+			} else if (col_sortby == "desc") {
+				sort_str = "asc"
+				column.setAttribute("sortby", sort_str)
+			} else if (col_sortby == "asc") {
+				column.removeAttribute("sortby")
+				column.removeAttribute("order")
+			}
+
+			var parent_page = column.closest(".appy-page").getAttribute("link").replace("/", "")
+			var current_url = doc.parse_url()
+			var sort_key = column.getAttribute('key')
+			for (var p=0; p<current_url.length; p++) {
+				var page = current_url[p]
+				if (parent_page == page[0]) {
+					var option_updated = false
+					for (var o=0; o<page.length; o++) {
+						if (o > 0) {
+							var option = page[o]
+							if (option[0] == sort_key) {
+								if (sort_str == "") {
+									current_url[p].splice(o, 1)
+									continue
+								}
+								option[1] = sort_str
+								option_updated = true
+							}
+						}
+					}
+
+					if (option_updated == false && sort_str != "") {
+						current_url[p].push([sort_key, sort_str])
+					}
+				}
+			}
+			
+			var updated_url = doc.construct_url(current_url)
+			appy.navigate(updated_url)
+		}
+
+		generate_table = function (table_id, data) {
+			var parent_page = doc.get_id(table_id).closest(".appy-page").getAttribute("link").replace("/", "")
+
+			var columns = []
+			if (typeof data[0] == "array") {
+				columns.concat(data[0])
+			} else if (typeof data[0] == "object") {
+				for (var r=0; r<data.length; r++) {
+					// copy column numbers over, then dedupe
+					columns = columns.concat(Object.keys(data[r]).filter((column) => 
+						columns.indexOf(column) < 0))
+				}
+			}
+
+			var table_rows = [columns]
+			for (var r=0; r<data.length; r++) {
+				var row_data = data[r]
+				if (typeof row_data == "array") {
+					table_rows.push(row_data)
+				} else if (typeof row_data == "object") {
+					var table_row = []
+					for (var c=0; c<columns.length; c++) {
+						var column = columns[c]
+						if (row_data.hasOwnProperty(column)) {
+							table_row.push(row_data[column])
+						} else {
+							table_row.push(null)
+						}
+					}
+					table_rows.push(table_row)
+				}
+			}
+			
+			var table = []
+			for (var r=0; r<table_rows.length; r++) {
+				var row_cells = []
+				for (var c=0; c<table_rows[r].length; c++) {
+					var cell_object = {className: "cell"}
+					var cell_value = table_rows[r][c]
+					if (r == 0) {
+						cell_object.onclick = "sort_column(this)"
+						cell_object.key = cell_value
+						cell_object.innerHTML = doc.capitalize(cell_value.replace(/_/g, " ")) + '<div class="sort-by"><svg class="sort-arrow" version="1.1" viewBox="0 0 50 100" xmlns="http://www.w3.org/2000/svg"><g id="arrow"><path d="m9.8828 29.812c2.1094-2.1094 4.2266-4.2266 6.3398-6.3398 3.3672-3.3672 6.7305-6.7305 10.098-10.098 0.76172-0.76172 1.5312-1.5312 2.2969-2.2969h-6.9062c2.1094 2.1094 4.2266 4.2266 6.3398 6.3398 3.3672 3.3672 6.7305 6.7305 10.098 10.098 0.76172 0.76172 1.5312 1.5312 2.2969 2.2969 0.89063 0.89062 2.1953 1.4258 3.457 1.4258 1.2031 0 2.625-0.52734 3.457-1.4258 0.84766-0.92969 1.4844-2.1484 1.4258-3.457-0.058594-1.2969-0.49609-2.5195-1.4258-3.457-2.1094-2.1094-4.2266-4.2266-6.3398-6.3398-3.3672-3.3672-6.7305-6.7305-10.098-10.098-0.76172-0.76172-1.5312-1.5312-2.2969-2.2969-1.8672-1.8672-5.0391-1.8672-6.9062 0-2.1289 2.125-4.2383 4.2344-6.3555 6.3516-3.3633 3.3594-6.7305 6.7305-10.09 10.09-0.76172 0.76172-1.5312 1.5312-2.2969 2.2969-0.89062 0.89062-1.4258 2.1953-1.4258 3.457 0 1.2031 0.52734 2.625 1.4258 3.457 0.92969 0.84766 2.1484 1.4844 3.457 1.4258 1.2891-0.0625 2.5117-0.5 3.4492-1.4297z"/><path d="m20.281 7.625v2.2656 6.1523 9.1484 11.125 12.18 12.297 11.504 9.6875 6.9609c0 1.1016-0.007812 2.1953 0 3.3008v0.14844c0 1.25 0.54688 2.5703 1.4258 3.457 0.84766 0.84766 2.2344 1.4844 3.457 1.4258 1.2578-0.058594 2.5703-0.46875 3.457-1.4258 0.87891-0.95703 1.4258-2.1289 1.4258-3.457v-2.2656-6.1523-9.1484-11.125-12.18-12.297-11.504-9.6875-6.9609c0-1.1016 0.007813-2.1953 0-3.3008v-0.14844c0-1.25-0.54688-2.5703-1.4258-3.457-0.84766-0.84766-2.2344-1.4844-3.457-1.4258-1.2578 0.058593-2.5703 0.46875-3.457 1.4258-0.87891 0.95703-1.4258 2.1406-1.4258 3.457z"/></g></svg><svg class="sort-menu" version="1.1" viewBox="50 38 65 67" xmlns="http://www.w3.org/2000/svg"><g><path d="m42.207 50.969h5.125 12.258 14.875 12.805c2.0703 0 4.1484 0.03125 6.2188 0h0.085938c1.25 0 2.5703-0.54688 3.457-1.4258 0.84766-0.84766 1.4844-2.2344 1.4258-3.457-0.058593-1.2578-0.46875-2.5703-1.4258-3.457-0.95703-0.87891-2.1289-1.4258-3.457-1.4258h-5.125-12.258-14.875-12.805c-2.0703 0-4.1484-0.03125-6.2188 0h-0.085938c-1.25 0-2.5703 0.54688-3.457 1.4258-0.84766 0.84766-1.4844 2.2344-1.4258 3.457 0.058593 1.2578 0.46875 2.5703 1.4258 3.457 0.95703 0.86719 2.1289 1.4258 3.457 1.4258z"/><path d="m77.949 60.047h-3.5625-8.5078-10.344-8.9375c-1.4453 0-2.8906-0.019531-4.3359 0h-0.070313c-1.25 0-2.5703 0.54688-3.457 1.4258-0.84766 0.84766-1.4844 2.2344-1.4258 3.457 0.058594 1.2578 0.46875 2.5703 1.4258 3.457 0.95703 0.87891 2.1289 1.4258 3.457 1.4258h3.5625 8.5078 10.344 8.9375c1.4453 0 2.8906 0.019531 4.3359 0h0.070313c1.25 0 2.5703-0.54688 3.457-1.4258 0.84766-0.84766 1.4844-2.2344 1.4258-3.457-0.058593-1.2578-0.46875-2.5703-1.4258-3.457-0.96875-0.86719-2.1406-1.4258-3.457-1.4258z"/><path d="m62.324 78.898h-6.8047-10.84-2.4805c-1.25 0-2.5703 0.54687-3.457 1.4258-0.84766 0.84766-1.4844 2.2344-1.4258 3.457 0.058594 1.2578 0.46875 2.5703 1.4258 3.457 0.95703 0.87891 2.1289 1.4258 3.457 1.4258h6.8047 10.84 2.4805c1.25 0 2.5703-0.54687 3.457-1.4258 0.84766-0.84766 1.4844-2.2344 1.4258-3.457-0.058593-1.2578-0.46875-2.5703-1.4258-3.457-0.96875-0.87109-2.1367-1.4258-3.457-1.4258z"/></g></svg></div>'
+
+						doc.parse_url().forEach(function(page, index) {
+							if (page[0] == parent_page) {
+								var options = page.slice(1, page.length)
+								options.forEach(function(option, index) {
+									if (option[0] == cell_value) {
+										cell_object.sortby = option[1]
+										cell_object.order = index + 1
+									}
+								})
+							}
+						})
+					} else {
+						cell_object.innerHTML = cell_value
+					}
+
+					row_cells.push(doc.create_el("div", cell_object))
+				}
+				
+				table.push(doc.create_el("div", {
+					className: "row", 
+					children: row_cells 
+				}))
+			}
+
+			var generated_table = doc.create_el("div", {
+				children: table })
+
+			doc.get_id(table_id).innerHTML = generated_table.innerHTML
+		}
+	</script>
+
+</table-view>

@@ -1,0 +1,190 @@
+<nav-link definition>
+
+	<template>
+		<div class="nav-link" link="<page-link>">
+			<div class="link-action" onclick="navigate_window(this)">
+				<div class="icon <icon-class>">
+					<link-icon var></link-icon>
+				</div>
+				<div class="link-name"><link-name var></link-name></div>
+			</div>
+			<div class="split-window" onclick="split_window(this)" title="Split browser window with <link-name>.">
+				<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+				 	<path d="m75 81.25h-68.75c-3.4492 0-6.25-2.793-6.25-6.25v-68.75c0-3.4492 2.8008-6.25 6.25-6.25h68.75c3.457 0 6.25 2.8008 6.25 6.25v68.75c0 3.457-2.793 6.25-6.25 6.25zm-62.5-12.5h56.25v-56.25h-56.25zm81.25 31.25h-68.75c-3.4492 0-6.25-2.793-6.25-6.25v-6.25h68.75v-68.75h6.25c3.457 0 6.25 2.8008 6.25 6.25v68.75c0 3.457-2.793 6.25-6.25 6.25z"/>
+				</svg>
+			</div>
+		</div><br>
+	</template>
+
+	<style>
+		.nav-link {
+			box-sizing:border-box;
+			border-bottom:1px solid #222127;
+			display:inline-block;
+			padding:15px 0 15px 20px;
+			position:relative;
+			transition:transform .3s linear, min-width .3s ease-out;
+			transform-origin: left center;
+			min-width:210px;
+			width:100%;
+		}
+
+			.link-action {
+				display:inline-block;
+			}
+
+			.link-action:hover {
+				cursor:pointer;
+			}
+
+			.nav-link .icon,
+			.nav-link .link-name,
+			.nav-link .split-window {
+				display:inline-block;
+				vertical-align:middle;
+			}
+
+				.nav-link .icon svg {
+					fill:#fff;
+                	stroke:#fff;
+					height:30px;
+					margin-bottom:3px;
+					margin-right:8px;
+					vertical-align:middle;
+					width:30px;
+				}
+
+				.nav-link .icon.small svg {
+					height:23px;
+					width:30px;
+				}
+
+				.nav-link .icon.medium svg {
+					height:27px;
+					width:30px;
+				}
+
+				.nav-link .icon.large svg {
+					height:36px;
+					width:30px;
+				}
+
+				.nav-link .icon.flip svg {
+					transform:rotate(180deg);
+					margin-top:2px;
+				}
+
+				.nav-link .link-name {
+					box-sizing:border-box;
+					color:#fff;
+					font-size:.8rem;
+					font-weight:400;
+					max-width:210px;
+					margin-right:8px;
+					overflow:hidden;
+					transition:max-width .30s ease-out;
+					white-space:nowrap;
+				}
+
+				.link-action:hover .link-name,
+				.link-action:hover .icon {
+					color:#F1C0A9;
+					cursor:pointer;
+					/*text-decoration:underline;*/
+				}
+
+				.link-action:hover .icon svg {
+					fill:#F1C0A9;
+				}
+
+				.nav-link .split-window {
+					box-sizing:border-box;
+					display:inline-block;
+					max-width:24px;
+					overflow:hidden;
+					position:absolute;
+					right:16px;
+					top:50%;
+					margin-top:-12px;
+				}
+
+				.nav-link .split-window:hover svg {
+					cursor:pointer;
+					fill:#F1C0A9;
+				}
+
+				.nav-link .split-window svg {
+					fill:#475166;
+					height:20px;
+					transform:scaleX(-1);
+					width:20px;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link .link-name,
+				body[minimized="true"] .nav-bar .nav-link .split-window {
+					max-width:0;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link {
+					background-color:#262632;
+					min-width:0;
+					width:auto;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link:hover .link-name,
+				body[minimized="true"] .nav-bar .nav-link:hover .split-window {
+					max-width:200px;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link .split-window {
+					right:11px;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link:hover .link-action {
+					padding-right:32px;
+				}
+
+				body[multiple-pages="true"] .nav-bar .nav-link .split-window {
+					display:none;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link.minimize .link-name:after {
+					content:'Maximize menu';
+				}
+
+				body[minimized="false"] .nav-bar .nav-link.minimize .link-name:after {
+					content:'Minimize menu';
+				}
+
+				body[minimized="false"] .nav-bar .nav-link.minimize .icon svg {
+					transform:rotate(180deg);
+				}
+	</style>
+
+	<script>
+		function navigate_window (link) {
+			var page_styles = window.getComputedStyle(link.closest(".appy-page"))
+			var window_order = page_styles.getPropertyValue('order')
+
+			var current_url = doc.parse_url()
+			var new_url = link.closest(".nav-link").getAttribute("link").replace("/", "")
+			var page_to_update = current_url[window_order-1]
+			if (page_to_update[0] != new_url) {
+				current_url[window_order-1] = [new_url] }
+
+			var updated_url = doc.construct_url(current_url)
+			if (window.location.pathname.indexOf(new_url) == -1) {
+				appy.navigate(updated_url)	
+			}
+		}
+
+		function split_window (split_button) {
+			var current_url = window.location.pathname
+			var new_page = split_button.parentElement.getAttribute("link")
+			if (current_url.indexOf(new_page) == -1) {
+				appy.navigate(current_url + "~" + new_page)
+			}
+		}
+	</script>
+
+</nav-link>

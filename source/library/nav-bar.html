@@ -1,0 +1,135 @@
+<nav-bar definition>
+
+	<template><!--
+	 --><div class="nav-bar">
+	 		<div class="close-nav" onclick="close_nav(this)" title="Close split window.">
+				<svg-close></svg-close>
+	 		</div>
+
+			<nav-link page-link="/hours">
+				<link-name>Hours</link-name>
+				<link-icon>
+					<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+					 <path d="m93.75 3.125h-87.5c-1.7266 0-3.125 1.3984-3.125 3.125v12.5c0 1.7266 1.3984 3.125 3.125 3.125h3.125v37.5c0 1.7266 1.3984 3.125 3.125 3.125h34.375v17.246l-14.453 11.562c-1.3477 1.0781-1.5664 3.043-0.48828 4.3906 0.62109 0.77344 1.5273 1.1758 2.4453 1.1758 0.68359 0 1.375-0.22266 1.9492-0.68359l10.547-8.4375v5.9961c0 1.7266 1.3984 3.125 3.125 3.125s3.125-1.3984 3.125-3.125v-5.9961l10.547 8.4375c0.57812 0.46094 1.2656 0.68359 1.9492 0.68359 0.91797 0 1.8242-0.40234 2.4453-1.1719 1.0781-1.3477 0.85938-3.3125-0.48828-4.3906l-14.453-11.562v-17.25h34.375c1.7266 0 3.125-1.3984 3.125-3.125v-37.5h3.125c1.7266 0 3.125-1.3984 3.125-3.125v-12.5c0-1.7266-1.3984-3.125-3.125-3.125zm-9.375 53.125h-68.75v-34.375h68.75zm6.25-40.625h-81.25v-6.25h81.25z"/>
+					</svg>
+				</link-icon>
+			</nav-link>
+
+
+			<div class="nav-link minimize" onclick="minimize_nav(this)">
+				<div class="icon">
+					<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+					 <path d="m59.211 52.367l-48.23 46.633c-0.625 0.60547-1.5508 1-2.3828 1-0.83203 0-1.7578-0.39453-2.3828-1l-5.1719-5.0039c-0.625-0.60547-1.043-1.5039-1.043-2.3047 0-0.80078 0.41797-1.6953 1.043-2.3047l40.676-39.328-40.676-39.332c-0.625-0.60156-1.043-1.5-1.043-2.3008 0-0.80469 0.41797-1.6992 1.043-2.3047l5.1719-5c0.625-0.60938 1.5547-1.0078 2.3828-1.0078s1.7578 0.39844 2.3789 1.0078l48.234 46.633c0.625 0.60938 1.0391 1.4961 1.0391 2.3047-0.003906 0.80859-0.41406 1.6953-1.0391 2.3086zm39.738 0l-48.219 46.633c-0.625 0.60938-1.5547 1-2.3828 1-0.83203 0-1.7617-0.39453-2.3867-1l-5.168-5.0039c-0.625-0.60547-1.043-1.5-1.043-2.3047 0-0.80469 0.41797-1.6953 1.043-2.3047l40.68-39.328-40.68-39.332c-0.625-0.60156-1.043-1.5-1.043-2.3008 0-0.80469 0.41797-1.6992 1.043-2.3047l5.168-5c0.625-0.60938 1.5547-1.0078 2.3867-1.0078 0.82812 0 1.7539 0.39844 2.3828 1.0078l48.223 46.633c0.62891 0.60547 1.0469 1.4961 1.0469 2.3047s-0.41797 1.6953-1.0508 2.3086z"/>
+					</svg>
+				</div>
+				<div class="link-name"></div>
+			</div>
+
+			<nav-link page-link="/logout">
+				<link-name>Logout</link-name>
+				<link-icon icon-class="small flip">
+					<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+						<g>
+						  	<path d="m95.699 45.699-20.098-20.098c-2.3984-2.3984-6.1992-2.3984-8.6016 0-2.3984 2.3984-2.3984 6.1992 0 8.6016l9.6992 9.6992-42.801-0.003906c-3.3984 0-6.1016 2.6992-6.1016 6.1016 0 3.3984 2.6992 6.1016 6.1016 6.1016h42.801l-9.6992 9.6992c-2.3984 2.3984-2.3984 6.1992 0 8.6016 1.1992 1.1992 2.6992 1.8008 4.3008 1.8008 1.6016 0 3.1016-0.60156 4.3008-1.8008l20.102-20.102c2.3984-2.4023 2.3984-6.1992-0.003906-8.6016z"/>
+						  	<path d="m31.102 80.199h-16.402v-60.398h16.5c3.3984 0 6.1016-2.6992 6.1016-6.1016 0-3.3984-2.6992-6.1016-6.1016-6.1016l-22.598 0.003906c-3.3984 0-6.1016 2.6992-6.1016 6.1016v72.5c0 3.3984 2.6992 6.1016 6.1016 6.1016h22.602c3.3984 0 6.1016-2.6992 6.1016-6.1016-0.10547-3.3047-2.8047-6.0039-6.2031-6.0039z"/>
+						</g>
+					</svg>
+				</link-icon>
+			</nav-link>
+		</div><!--		
+ --></template>
+
+	<style>
+		.nav-bar {
+			font-family:urbane;
+			color:#fff;
+			display:inline-block;
+			position:absolute;
+			text-align:left;
+			left:0;
+			top:0px;
+			bottom:0px;
+			z-index:1;
+		}
+
+			.nav-bar:after {
+				background-color:#262632;
+				content:'';
+				position:absolute;
+				transition:min-width .3s ease-out;
+				top:0; bottom:0;
+				left:0; 
+				min-width:71px;
+				z-index:-1;
+			}
+
+		.close-nav {
+			background-color:#222127;
+			cursor:pointer;
+			height:0;
+			overflow:hidden;
+			text-align:center;
+			line-height:90px;
+			width:71px;
+		}
+
+			.close-nav:hover {
+				background-color:#313038;
+			}
+
+			.close-nav svg {
+				display:inline-block;
+				fill:#FF473D;
+				height:40px;
+				margin-left:4px;
+				margin-bottom:2px;
+				vertical-align:middle;
+				width:auto;
+			}
+
+		.nav-link.minimize {
+			border-bottom-width:0;
+			cursor:pointer;
+		}
+
+			.nav-link.minimize .icon svg {
+				height:12px;
+				padding:7px 0;
+				transition:transform .3s ease-out;
+			}
+
+		body[multiple-pages="true"] .nav-link.minimize {
+			display:none;
+		}
+
+		body[minimized="false"] .nav-bar:after {
+			min-width:215px;
+		}
+
+		.nav-link[link="/logout"] {
+			bottom:0;
+			left:0;
+			position:absolute;
+			white-space:nowrap;
+		}
+
+		body[minimized="true"] .nav-link[link="/logout"]:hover {
+			width:140px;
+		}
+
+		.nav-link[link="/logout"] .split-window {
+			display:none;
+		}
+	</style>
+
+	<script>
+		function close_nav (close_button) {
+			appy.navigate("/" + window.location.pathname.split("/")[1])
+		}
+
+		function minimize_nav (minimize_button) {
+			document.body.setAttribute("minimized", (document.body.getAttribute("minimized") != "true"))
+		}
+	</script>
+
+</nav-bar>

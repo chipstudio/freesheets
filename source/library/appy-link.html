@@ -1,0 +1,141 @@
+<appy-link definition>
+
+    <template>
+        <div class="appy-link <link-class>" 
+             onclick="appy.navigate(this)" 
+             link="<page-link>"><inner-html></inner-html></div>
+    </template>
+
+    <script>
+        (function(history){
+            var pushState = history.pushState;
+            history.pushState = function(state) {
+                if (typeof history.onpushstate == "function") {
+                    history.onpushstate({state: state}); }
+                return pushState.apply(history, arguments);
+            };
+        })(window.history);
+
+        function check_page_status () {
+            var current_url = doc.parse_url()
+
+            for (var o=0; o<4; o++) {
+                if (o < current_url.length) {
+                    var page = current_url[o][0]
+                    document.body.setAttribute("page-" + (o+1), "/" + page)
+                } else {
+                    document.body.removeAttribute("page-" + (o+1))
+                }
+            }
+
+            if (current_url.length > 1) {
+                document.body.setAttribute("minimized", true)
+                document.body.setAttribute("multiple-pages", true)
+            } else {
+                document.body.setAttribute("multiple-pages", false)
+            }
+        }
+
+        window.appy = {}
+        appy.navigate = function (appy_link) {
+            if (typeof appy_link == "string") {
+                new_page_link = appy_link
+            } else {
+                new_page_link = appy_link.getAttribute("link")
+            }
+
+            history.pushState(new_page_link, null, new_page_link);
+
+            check_page_status()
+        }
+        
+        window.onpopstate = history.onpushstate = function(e) {
+            var route = e.state
+            route = route.replace("/", "")
+
+            var routes = {
+                login: function () {
+                    var prev_page = window.location.pathname
+                    var provider = new firebase.auth.GoogleAuthProvider()
+                    firebase.auth().signInWithPopup(provider).then(function(result) {
+
+                    }).catch(function(error) {
+                        appy.navigate("/")
+                    })
+                },
+                logout: function () {
+                    firebase.auth().signOut().then(function(){
+                        window.location.href = "/"
+                    }).catch(function(error) {
+
+                    })
+                }
+            }
+
+            if (routes.hasOwnProperty(route)) {
+                routes[route]()
+            } else if (e.state.indexOf("logout") > -1) {
+                routes.logout()
+            }
+
+            doc.get_id("appy-pages").setAttribute("page", e.state)
+
+            check_page_status()
+        };
+
+        doc.loaded(function() {
+            firebase.auth().onAuthStateChanged(function(user) {
+                var header = doc.get_id("header")
+                if (user) {
+                    var user_email = user.email;
+                    var email_domain = user_email.split("@")[1]
+
+                    var org_obj = {domain: email_domain}
+                    var name_collector = function (_org_obj) {
+                        return new Promise(function(resolve, reject) {
+                            var org_name = prompt("What is your organization name?")
+                            _org_obj.name = org_name
+                            resolve(_org_obj)
+                        })
+                    }
+
+                    data.get_or_create("Organization", ["domain", "==", email_domain], org_obj, name_collector).then(function(org_id) {
+                        var user_obj = {
+                            email: user_email,
+                            organization: org_id,
+                            profile_img: user.photoURL }
+
+                        var parsed_name = user.displayName.split(" ")
+                        user_obj.name_first = parsed_name[0]
+                        if (parsed_name.length > 1) {
+                            user_obj.name_last = parsed_name[parsed_name.length - 1] }
+
+                        window.org_id = org_id
+                        data.get_or_create("User", ["email", "==", user_email], user_obj).then(function (user_id) {
+                            window.user_id = user_id
+                        })
+                    }).catch(function(errors) {
+                        console.log(errors)
+                    })                    
+
+                    document.body.setAttribute("authed", "true")
+                    if (window.location.pathname == "/" || window.location.pathname == "/login") {
+                        appy.navigate("/episodes")
+                    }
+                } else {
+                    document.body.setAttribute("authed", "false")
+                    appy.navigate("/")
+                }
+            })
+
+            window.onpopstate({"state":window.location.pathname})
+        })
+    </script>
+
+    <style>
+        .appy-link {
+            cursor:pointer;
+        }
+    </style>
+
+</appy-link>
