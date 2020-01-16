@@ -1,4 +1,5 @@
 #!/bin/bash
+npm install
 
 ## EMPTY PROOF FOLDER
 rm -Rf proof/*
@@ -13,5 +14,5 @@ done
 
 ## POPULATE PROOF FOLDER
 rm -Rf proof/library
-mv source/ backup/
-mv proof/ source/
+mv source backup
+mv proof source

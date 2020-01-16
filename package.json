@@ -11,5 +11,8 @@
   },
   "engine": {
     "node": ">=0.6"
+  },
+  "scripts": {
+    "postinstall": "cd functions/js && npm install"
   }
 }
