@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html><head>
+        <script src="/doc.js"></script>
+        <script src="/data.js"></script>
+        
+        <link rel="stylesheet" href="/reset.css">
+        <link rel="stylesheet" href="https://use.typekit.net/ncg7sst.css">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+        <style>
+        
+
+        .appy-link {
+            cursor:pointer;
+        }
+    
+
+        .appy-page {
+            display:none;
+            min-height:100vh;
+            position:relative;
+        }
+
+            .page-header {
+                box-sizing:border-box;
+                padding-left:100px;
+                padding-bottom:10px;
+                padding-top:33px;
+                transition:padding-left .3s ease-out;
+            }
+
+            body[minimized="false"] .page-header {
+                padding-left:240px;
+            }
+
+                h1 {
+                    color:#fff;
+                    font-family:urbane;
+                    font-size:1.75rem;
+                    font-weight:700;
+                }
+
+            .page-content {
+                color:#ccc;
+                font-family:urbane;
+                font-size:.9rem;
+                font-weight:500;
+                padding:20px;
+                padding-right:25px;
+                padding-left:100px;
+                transition:padding-left .3s ease-out;
+            }
+
+            body[minimized="false"] .appy-page .page-content {
+                padding-left:240px;
+            }
+
+
+            .appy-page .modal-container {
+                background-color:rgba(0,0,0,.8);
+                bottom:0; left:0; right:0; top:0;
+                content:'';
+                display:none;
+                position:absolute;
+                z-index:5;
+            }
+
+            .appy-page[show-modal="true"] .modal-container {
+                display:block;
+            }
+
+            .appy-page .modal-close {
+                color:#fff;
+                cursor:pointer;
+                height:30px;
+                left:50%;
+                margin-left:-155px;
+                position:absolute;
+                top:6.5vh;
+                width:30px;
+            }
+
+                .appy-page .modal-close svg {
+                    fill:#fff;
+                    height:auto;
+                    width:100%;
+                }
+
+            .appy-page .modal-content {
+                background-color:#fff;
+                left:50%;
+                margin-left:-150px;
+                min-height:200px;
+                position:absolute;
+                top:10vh;
+                width:300px;
+            }
+
+                .modal-content form {
+                    background-color:#222127;
+                    color:#fff;
+                    padding:20px;
+                    z-index:2;
+                }
+
+                    .modal-content form label {
+                        display:inline-block;
+                        margin-top:20px;
+                        margin-right:10px;
+                        padding-bottom:5px;
+                        text-transform:capitalize;
+                    }
+
+                    .modal-content form label:first-child {
+                        margin-top:0;
+                    }
+
+                    .modal-content form input,
+                    .modal-content form select,
+                    .modal-content form input[type="submit"] {
+                        border-radius:8px;
+                        box-sizing:border-box;
+                        display:inline-block;
+                        font-family:urbane;
+                        font-size:1.2rem;
+                        margin-right:30px;
+                        padding:10px;
+                        width:100%;
+                    }
+
+                    .modal-content form select {
+                        text-transform:capitalize;
+                    }
+
+                    .modal-content form input[type="submit"] {
+                        appearance:none;
+                        -webkit-apperance:none;
+                        background-color:#262B36;
+                        border:none;
+                        margin-top:20px;
+                        padding-top:14px;
+                        padding-bottom:14px;
+                        color:#fff;
+                        cursor:pointer;
+                    }
+
+                    .modal-content .custom-select {
+                        display: block;
+                        width: 100%;
+                    }
+
+                    .custom-select {
+                        appearance: none;
+                        -moz-appearance: none;
+                        -webkit-appearance: none;
+                        background-color: #fff;
+                        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+                            linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
+                        background-position: right .7em top 50%, 0 0;
+                        background-repeat: no-repeat, repeat;
+                        background-size: .65em auto, 100%;
+                        border: 1px solid #aaa;
+                        border-radius: 8px;
+                        box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+                        box-sizing: border-box;
+                        display:inline-block;
+                        color: #444;
+                        font-size: 1rem;
+                        font-family: sans-serif;
+                        font-weight: 700;
+                        line-height: 1.3rem;
+                        margin: 0;
+                        max-width: 100%;
+                        padding: .6em 1.4em .5em .8em;
+                        padding-right:30px;
+                    }
+
+                    .custom-select.dark {
+                        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+                            linear-gradient(to bottom, #222127 0%, #222127 100%);
+                        border-color:rgba(0,0,0,0);
+                        color:#fff;
+                    }
+
+                    .custom-select::-ms-expand {
+                        display: none;
+                    }
+
+                    .custom-select:hover {
+                        border-color: #888;
+                    }
+
+                    .custom-select:focus {
+                        border-color: #aaa;
+                        box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+                        box-shadow: 0 0 0 3px -moz-mac-focusring;
+                        color: #fff;
+                        outline: none;
+                    }
+                        .custom-select option {
+                            font-weight:normal;
+                        }
+
+                    .delete-model {
+                        box-sizing:border-box;
+                        color:#FF473D;
+                        cursor:pointer;
+                        padding:15px;
+                        text-align:center;
+                    }
+    
+
+		.nav-bar {
+			font-family:urbane;
+			color:#fff;
+			display:inline-block;
+			position:absolute;
+			text-align:left;
+			left:0;
+			top:0px;
+			bottom:0px;
+			z-index:1;
+		}
+
+			.nav-bar:after {
+				background-color:#262632;
+				content:'';
+				position:absolute;
+				transition:min-width .3s ease-out;
+				top:0; bottom:0;
+				left:0; 
+				min-width:71px;
+				z-index:-1;
+			}
+
+		.close-nav {
+			background-color:#222127;
+			cursor:pointer;
+			height:0;
+			overflow:hidden;
+			text-align:center;
+			line-height:90px;
+			width:71px;
+		}
+
+			.close-nav:hover {
+				background-color:#313038;
+			}
+
+			.close-nav svg {
+				display:inline-block;
+				fill:#FF473D;
+				height:40px;
+				margin-left:4px;
+				margin-bottom:2px;
+				vertical-align:middle;
+				width:auto;
+			}
+
+		.nav-link.minimize {
+			border-bottom-width:0;
+			cursor:pointer;
+		}
+
+			.nav-link.minimize .icon svg {
+				height:12px;
+				padding:7px 0;
+				transition:transform .3s ease-out;
+			}
+
+		body[multiple-pages="true"] .nav-link.minimize {
+			display:none;
+		}
+
+		body[minimized="false"] .nav-bar:after {
+			min-width:215px;
+		}
+
+		.nav-link[link="/logout"] {
+			bottom:0;
+			left:0;
+			position:absolute;
+			white-space:nowrap;
+		}
+
+		body[minimized="true"] .nav-link[link="/logout"]:hover {
+			width:140px;
+		}
+
+		.nav-link[link="/logout"] .split-window {
+			display:none;
+		}
+	
+
+		.nav-link {
+			box-sizing:border-box;
+			border-bottom:1px solid #222127;
+			display:inline-block;
+			padding:15px 0 15px 20px;
+			position:relative;
+			transition:transform .3s linear, min-width .3s ease-out;
+			transform-origin: left center;
+			min-width:210px;
+			width:100%;
+		}
+
+			.link-action {
+				display:inline-block;
+			}
+
+			.link-action:hover {
+				cursor:pointer;
+			}
+
+			.nav-link .icon,
+			.nav-link .link-name,
+			.nav-link .split-window {
+				display:inline-block;
+				vertical-align:middle;
+			}
+
+				.nav-link .icon svg {
+					fill:#fff;
+                	stroke:#fff;
+					height:30px;
+					margin-bottom:3px;
+					margin-right:8px;
+					vertical-align:middle;
+					width:30px;
+				}
+
+				.nav-link .icon.small svg {
+					height:23px;
+					width:30px;
+				}
+
+				.nav-link .icon.medium svg {
+					height:27px;
+					width:30px;
+				}
+
+				.nav-link .icon.large svg {
+					height:36px;
+					width:30px;
+				}
+
+				.nav-link .icon.flip svg {
+					transform:rotate(180deg);
+					margin-top:2px;
+				}
+
+				.nav-link .link-name {
+					box-sizing:border-box;
+					color:#fff;
+					font-size:.8rem;
+					font-weight:400;
+					max-width:210px;
+					margin-right:8px;
+					overflow:hidden;
+					transition:max-width .30s ease-out;
+					white-space:nowrap;
+				}
+
+				.link-action:hover .link-name,
+				.link-action:hover .icon {
+					color:#F1C0A9;
+					cursor:pointer;
+					/*text-decoration:underline;*/
+				}
+
+				.link-action:hover .icon svg {
+					fill:#F1C0A9;
+				}
+
+				.nav-link .split-window {
+					box-sizing:border-box;
+					display:inline-block;
+					max-width:24px;
+					overflow:hidden;
+					position:absolute;
+					right:16px;
+					top:50%;
+					margin-top:-12px;
+				}
+
+				.nav-link .split-window:hover svg {
+					cursor:pointer;
+					fill:#F1C0A9;
+				}
+
+				.nav-link .split-window svg {
+					fill:#475166;
+					height:20px;
+					transform:scaleX(-1);
+					width:20px;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link .link-name,
+				body[minimized="true"] .nav-bar .nav-link .split-window {
+					max-width:0;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link {
+					background-color:#262632;
+					min-width:0;
+					width:auto;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link:hover .link-name,
+				body[minimized="true"] .nav-bar .nav-link:hover .split-window {
+					max-width:200px;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link .split-window {
+					right:11px;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link:hover .link-action {
+					padding-right:32px;
+				}
+
+				body[multiple-pages="true"] .nav-bar .nav-link .split-window {
+					display:none;
+				}
+
+				body[minimized="true"] .nav-bar .nav-link.minimize .link-name:after {
+					content:'Maximize menu';
+				}
+
+				body[minimized="false"] .nav-bar .nav-link.minimize .link-name:after {
+					content:'Minimize menu';
+				}
+
+				body[minimized="false"] .nav-bar .nav-link.minimize .icon svg {
+					transform:rotate(180deg);
+				}
+	</style>
+    
+	<script type="text/javascript">
+        (function(history){
+            var pushState = history.pushState;
+            history.pushState = function(state) {
+                if (typeof history.onpushstate == "function") {
+                    history.onpushstate({state: state}); }
+                return pushState.apply(history, arguments);
+            };
+        })(window.history);
+
+        function check_page_status () {
+            var current_url = doc.parse_url()
+
+            for (var o=0; o<4; o++) {
+                if (o < current_url.length) {
+                    var page = current_url[o][0]
+                    document.body.setAttribute("page-" + (o+1), "/" + page)
+                } else {
+                    document.body.removeAttribute("page-" + (o+1))
+                }
+            }
+
+            if (current_url.length > 1) {
+                document.body.setAttribute("minimized", true)
+                document.body.setAttribute("multiple-pages", true)
+            } else {
+                document.body.setAttribute("multiple-pages", false)
+            }
+        }
+
+        window.appy = {}
+        appy.navigate = function (appy_link) {
+            if (typeof appy_link == "string") {
+                new_page_link = appy_link
+            } else {
+                new_page_link = appy_link.getAttribute("link")
+            }
+
+            history.pushState(new_page_link, null, new_page_link);
+
+            check_page_status()
+        }
+        
+        window.onpopstate = history.onpushstate = function(e) {
+            var route = e.state
+            route = route.replace("/", "")
+
+            var routes = {
+                login: function () {
+                    var prev_page = window.location.pathname
+                    var provider = new firebase.auth.GoogleAuthProvider()
+                    firebase.auth().signInWithPopup(provider).then(function(result) {
+
+                    }).catch(function(error) {
+                        appy.navigate("/")
+                    })
+                },
+                logout: function () {
+                    firebase.auth().signOut().then(function(){
+                        window.location.href = "/"
+                    }).catch(function(error) {
+
+                    })
+                }
+            }
+
+            if (routes.hasOwnProperty(route)) {
+                routes[route]()
+            } else if (e.state.indexOf("logout") > -1) {
+                routes.logout()
+            }
+
+            doc.get_id("appy-pages").setAttribute("page", e.state)
+
+            check_page_status()
+        };
+
+        doc.loaded(function() {
+            firebase.auth().onAuthStateChanged(function(user) {
+                var header = doc.get_id("header")
+                if (user) {
+                    var user_email = user.email;
+                    var email_domain = user_email.split("@")[1]
+
+                    var org_obj = {domain: email_domain}
+                    var name_collector = function (_org_obj) {
+                        return new Promise(function(resolve, reject) {
+                            var org_name = prompt("What is your organization name?")
+                            _org_obj.name = org_name
+                            resolve(_org_obj)
+                        })
+                    }
+
+                    data.get_or_create("Organization", ["domain", "==", email_domain], org_obj, name_collector).then(function(org_id) {
+                        var user_obj = {
+                            email: user_email,
+                            organization: org_id,
+                            profile_img: user.photoURL }
+
+                        var parsed_name = user.displayName.split(" ")
+                        user_obj.name_first = parsed_name[0]
+                        if (parsed_name.length > 1) {
+                            user_obj.name_last = parsed_name[parsed_name.length - 1] }
+
+                        window.org_id = org_id
+                        data.get_or_create("User", ["email", "==", user_email], user_obj).then(function (user_id) {
+                            window.user_id = user_id
+                        })
+                    }).catch(function(errors) {
+                        console.log(errors)
+                    })                    
+
+                    document.body.setAttribute("authed", "true")
+                    if (window.location.pathname == "/" || window.location.pathname == "/login") {
+                        appy.navigate("/episodes")
+                    }
+                } else {
+                    document.body.setAttribute("authed", "false")
+                    appy.navigate("/")
+                }
+            })
+
+            window.onpopstate({"state":window.location.pathname})
+        })
+    </script>
+	<script type="text/javascript">
+		function close_nav (close_button) {
+			appy.navigate("/" + window.location.pathname.split("/")[1])
+		}
+
+		function minimize_nav (minimize_button) {
+			document.body.setAttribute("minimized", (document.body.getAttribute("minimized") != "true"))
+		}
+	</script>
+	<script type="text/javascript">
+		function navigate_window (link) {
+			var page_styles = window.getComputedStyle(link.closest(".appy-page"))
+			var window_order = page_styles.getPropertyValue('order')
+
+			var current_url = doc.parse_url()
+			var new_url = link.closest(".nav-link").getAttribute("link").replace("/", "")
+			var page_to_update = current_url[window_order-1]
+			if (page_to_update[0] != new_url) {
+				current_url[window_order-1] = [new_url] }
+
+			var updated_url = doc.construct_url(current_url)
+			if (window.location.pathname.indexOf(new_url) == -1) {
+				appy.navigate(updated_url)	
+			}
+		}
+
+		function split_window (split_button) {
+			var current_url = window.location.pathname
+			var new_page = split_button.parentElement.getAttribute("link")
+			if (current_url.indexOf(new_page) == -1) {
+				appy.navigate(current_url + "~" + new_page)
+			}
+		}
+	</script></head>
+
+    <body minimized="false">
+        <header id="header">
+            <div class="logo">
+                Free Sheets
+            </div>
+        </header>
+
+        <div class="page-container" id="appy-pages">
+            
+        <div class="appy-page" link="/hours">
+            <!--
+	 --><div class="nav-bar">
+	 		<div class="close-nav" onclick="close_nav(this)" title="Close split window.">
+				
+		<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+			<path d="m82.102 75.898l-8.1992 8.1992-24.902-24.898-24.898 24.902-8.1992-8.1992 24.898-24.902-24.902-24.898 8.1992-8.1992 24.902 24.898 24.898-24.898 8.1992 8.1992-24.898 24.898z"></path>
+		</svg>
+	
+	 		</div>
+
+			
+		<div class="nav-link" link="/hours">
+			<div class="link-action" onclick="navigate_window(this)">
+				<div class="icon ">
+					
+					<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+					 <path d="m93.75 3.125h-87.5c-1.7266 0-3.125 1.3984-3.125 3.125v12.5c0 1.7266 1.3984 3.125 3.125 3.125h3.125v37.5c0 1.7266 1.3984 3.125 3.125 3.125h34.375v17.246l-14.453 11.562c-1.3477 1.0781-1.5664 3.043-0.48828 4.3906 0.62109 0.77344 1.5273 1.1758 2.4453 1.1758 0.68359 0 1.375-0.22266 1.9492-0.68359l10.547-8.4375v5.9961c0 1.7266 1.3984 3.125 3.125 3.125s3.125-1.3984 3.125-3.125v-5.9961l10.547 8.4375c0.57812 0.46094 1.2656 0.68359 1.9492 0.68359 0.91797 0 1.8242-0.40234 2.4453-1.1719 1.0781-1.3477 0.85938-3.3125-0.48828-4.3906l-14.453-11.562v-17.25h34.375c1.7266 0 3.125-1.3984 3.125-3.125v-37.5h3.125c1.7266 0 3.125-1.3984 3.125-3.125v-12.5c0-1.7266-1.3984-3.125-3.125-3.125zm-9.375 53.125h-68.75v-34.375h68.75zm6.25-40.625h-81.25v-6.25h81.25z"></path>
+					</svg>
+				
+				</div>
+				<div class="link-name">Hours</div>
+			</div>
+			<div class="split-window" onclick="split_window(this)" title="Split browser window with Hours.">
+				<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+				 	<path d="m75 81.25h-68.75c-3.4492 0-6.25-2.793-6.25-6.25v-68.75c0-3.4492 2.8008-6.25 6.25-6.25h68.75c3.457 0 6.25 2.8008 6.25 6.25v68.75c0 3.457-2.793 6.25-6.25 6.25zm-62.5-12.5h56.25v-56.25h-56.25zm81.25 31.25h-68.75c-3.4492 0-6.25-2.793-6.25-6.25v-6.25h68.75v-68.75h6.25c3.457 0 6.25 2.8008 6.25 6.25v68.75c0 3.457-2.793 6.25-6.25 6.25z"></path>
+				</svg>
+			</div>
+		</div><br>
+	
+
+
+			<div class="nav-link minimize" onclick="minimize_nav(this)">
+				<div class="icon">
+					<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+					 <path d="m59.211 52.367l-48.23 46.633c-0.625 0.60547-1.5508 1-2.3828 1-0.83203 0-1.7578-0.39453-2.3828-1l-5.1719-5.0039c-0.625-0.60547-1.043-1.5039-1.043-2.3047 0-0.80078 0.41797-1.6953 1.043-2.3047l40.676-39.328-40.676-39.332c-0.625-0.60156-1.043-1.5-1.043-2.3008 0-0.80469 0.41797-1.6992 1.043-2.3047l5.1719-5c0.625-0.60938 1.5547-1.0078 2.3828-1.0078s1.7578 0.39844 2.3789 1.0078l48.234 46.633c0.625 0.60938 1.0391 1.4961 1.0391 2.3047-0.003906 0.80859-0.41406 1.6953-1.0391 2.3086zm39.738 0l-48.219 46.633c-0.625 0.60938-1.5547 1-2.3828 1-0.83203 0-1.7617-0.39453-2.3867-1l-5.168-5.0039c-0.625-0.60547-1.043-1.5-1.043-2.3047 0-0.80469 0.41797-1.6953 1.043-2.3047l40.68-39.328-40.68-39.332c-0.625-0.60156-1.043-1.5-1.043-2.3008 0-0.80469 0.41797-1.6992 1.043-2.3047l5.168-5c0.625-0.60938 1.5547-1.0078 2.3867-1.0078 0.82812 0 1.7539 0.39844 2.3828 1.0078l48.223 46.633c0.62891 0.60547 1.0469 1.4961 1.0469 2.3047s-0.41797 1.6953-1.0508 2.3086z"></path>
+					</svg>
+				</div>
+				<div class="link-name"></div>
+			</div>
+
+			
+		<div class="nav-link" link="/logout">
+			<div class="link-action" onclick="navigate_window(this)">
+				<div class="icon small flip">
+					
+					<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+						<g>
+						  	<path d="m95.699 45.699-20.098-20.098c-2.3984-2.3984-6.1992-2.3984-8.6016 0-2.3984 2.3984-2.3984 6.1992 0 8.6016l9.6992 9.6992-42.801-0.003906c-3.3984 0-6.1016 2.6992-6.1016 6.1016 0 3.3984 2.6992 6.1016 6.1016 6.1016h42.801l-9.6992 9.6992c-2.3984 2.3984-2.3984 6.1992 0 8.6016 1.1992 1.1992 2.6992 1.8008 4.3008 1.8008 1.6016 0 3.1016-0.60156 4.3008-1.8008l20.102-20.102c2.3984-2.4023 2.3984-6.1992-0.003906-8.6016z"></path>
+						  	<path d="m31.102 80.199h-16.402v-60.398h16.5c3.3984 0 6.1016-2.6992 6.1016-6.1016 0-3.3984-2.6992-6.1016-6.1016-6.1016l-22.598 0.003906c-3.3984 0-6.1016 2.6992-6.1016 6.1016v72.5c0 3.3984 2.6992 6.1016 6.1016 6.1016h22.602c3.3984 0 6.1016-2.6992 6.1016-6.1016-0.10547-3.3047-2.8047-6.0039-6.2031-6.0039z"></path>
+						</g>
+					</svg>
+				
+				</div>
+				<div class="link-name">Logout</div>
+			</div>
+			<div class="split-window" onclick="split_window(this)" title="Split browser window with Logout.">
+				<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+				 	<path d="m75 81.25h-68.75c-3.4492 0-6.25-2.793-6.25-6.25v-68.75c0-3.4492 2.8008-6.25 6.25-6.25h68.75c3.457 0 6.25 2.8008 6.25 6.25v68.75c0 3.457-2.793 6.25-6.25 6.25zm-62.5-12.5h56.25v-56.25h-56.25zm81.25 31.25h-68.75c-3.4492 0-6.25-2.793-6.25-6.25v-6.25h68.75v-68.75h6.25c3.457 0 6.25 2.8008 6.25 6.25v68.75c0 3.457-2.793 6.25-6.25 6.25z"></path>
+				</svg>
+			</div>
+		</div><br>
+	
+		</div><!--		
+ -->
+            
+            <div class="page-header">
+                <h1>Hours</h1>
+            </div>
+
+            <div class="page-content">
+                 
+                    Hour Entries
+                
+            </div>
+
+            <div class="modal-container">
+                <div class="modal-close" onclick="doc.close_modal(this.closest('.appy-page'))">
+                    
+		<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+			<path d="m82.102 75.898l-8.1992 8.1992-24.902-24.898-24.898 24.902-8.1992-8.1992 24.898-24.902-24.902-24.898 8.1992-8.1992 24.902 24.898 24.898-24.898 8.1992 8.1992-24.898 24.898z"></path>
+		</svg>
+	
+                </div>
+                <div class="modal-content"></div>
+            </div>
+        </div>
+        
+        <style>
+            #appy-pages[page*="/hours"] .appy-page[link*="/hours"] {
+                display:block;
+            }
+
+            body[page-1="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"],
+            body[page-2="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"],
+            body[page-3="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"], 
+            body[page-4="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"],
+            body[page-1="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] .link-name,
+            body[page-2="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] .link-name,
+            body[page-3="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] .link-name, 
+            body[page-4="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] .link-name,
+            body[page-1="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] svg,
+            body[page-2="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] svg,
+            body[page-3="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] svg, 
+            body[page-4="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] svg {
+                color:#363647;
+                fill:#363647;
+                stroke:#363647;
+            }
+
+            body[page-1="/hours"] .appy-page[link="/hours"]  {order:1;}
+            body[page-2="/hours"] .appy-page[link="/hours"]  {order:2;}
+            body[page-3="/hours"] .appy-page[link="/hours"]  {order:3;}
+            body[page-4="/hours"] .appy-page[link="/hours"]  {order:4;}
+
+            /* on the first nav, position it below the <header> */
+            #appy-pages[page^="/hours"] .appy-page[link="/hours"] .nav-bar {
+                top:90px;
+            }
+
+            /* display close-nav link */
+            #appy-pages[page*="/hours"]:not([page^="/hours"]) .appy-page[link="/hours"] .nav-bar .close-nav {
+                height:90px;
+            }
+
+            /* don't display logout link */
+            #appy-pages[page*="/hours"]:not([page^="/hours"]) .appy-page[link="/hours"] .nav-bar .nav-link[link="/logout"] {
+                display:none;
+            }
+
+
+            /* when the selected page-link does not appear in the url, make it selectable */ 
+            #appy-pages:not([page*="/hours"]) .appy-page[link="/hours"] .nav-link[link="/hours"] svg {
+                fill:#fff;
+                stroke:#fff;
+            }
+
+            #appy-pages:not([page*="/hours"]) .appy-page[link="/hours"] .nav-link[link="/hours"] .link-name {
+                color:#fff;
+            }
+
+            /* style select page in tan */
+            .appy-page[link="/hours"] .nav-link[link="/hours"] .link-name {
+                color:#F1C0A9;
+                text-decoration:underline;
+            }
+
+            .appy-page[link="/hours"] .nav-link[link="/hours"] .icon svg {
+                fill: #F1C0A9;
+            }
+
+            /* don't display split window option on current page */
+            .appy-page[link="/hours"] .nav-link[link="/hours"] .split-window {
+                display:none;
+            }
+
+            #appy-pages[page^="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"],
+            #appy-pages[page^="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] .link-name,
+            #appy-pages[page^="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] .icon,
+            #appy-pages[page$="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"],
+            #appy-pages[page$="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] .link-name,
+            #appy-pages[page$="/hours"] .appy-page:not([link="/hours"]) .nav-link[link="/hours"] .icon {
+                cursor:not-allowed;
+            }
+
+            body[minimized="true"] .appy-page[link="/hours"] .nav-link[link="/hours"]:hover .link-name,
+            body[minimized="true"] .appy-page[link="/hours"] .nav-link[link="/hours"]:hover .split-window {
+                max-width:0;
+            }
+
+            body[minimized="true"] .appy-page[link="/hours"] .nav-link[link="/hours"]:hover .link-action {
+                padding-right:0;
+            } 
+
+            body[minimized="true"] .appy-page[link="/hours"] .nav-link[link="/hours"]:hover {
+                min-width:0;
+                width:auto;
+            }
+
+        </style>
+    
+        </div>
+
+        <div class="login-link">
+            
+        <div class="appy-link " onclick="appy.navigate(this)" link="/login">Login</div>
+    
+        </div>
+
+        <script src="/firebase/app.js"></script>
+        <script src="/firebase/analytics.js"></script>
+        <script src="/firebase/auth.js"></script>
+        <script src="/firebase/firestore.js"></script>
+        <script src="/firebase/init.js"></script>
+        <script src="/firebase/storage.js"></script>
+    
+
+</body></html>
