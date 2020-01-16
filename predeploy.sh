@@ -1,18 +1,24 @@
 #!/bin/bash
+
+## install jsdom + request
 npm install
 
-## EMPTY PROOF FOLDER
-rm -Rf proof/*
+## empty compiled folder
+rm -Rf compiled/*
 
-## copy everything to proof
-cp -Rf source/* proof/
+## copy all of the source folder to compiled
+cp -Rf source/* compiled/
 
-## dash each file into its original name
-for f in proof/*.html;
-do node -e "`curl -sS https://tryda.sh`" $f ${f/.*/.html} "proof/"
+## dashify each html file in the compiled folder
+for f in compiled/*.html;
+do node -e "`curl -sS https://tryda.sh`" $f ${f/.*/.html} "compiled/"
 done
 
-## POPULATE PROOF FOLDER
-rm -Rf proof/library
+## remove the dash library from the compiled folder
+rm -Rf compiled/library
+
+## rename our source directory to 'backup'
 mv source backup
-mv proof source
+
+## rename our compiled directory to 'source' for deploy
+mv compiled source
